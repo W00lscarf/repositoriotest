@@ -4,41 +4,35 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Calculadora</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    * { box-sizing: border-box; }
+    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    body {
+      margin: 0; min-height: 100svh; display: grid; place-items: center;
+      background: #0b1220; color: #e2e8f0;
+    }
+    .calculator {
+      width: min(360px, 92vw); background: #111827; border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35); padding: 16px;
+    }
+    .display {
+      display: block; text-align: right; font-size: clamp(1.8rem, 8vw, 2.6rem);
+      padding: 24px 12px; margin-bottom: 12px; background: #0b1220; border-radius: 12px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .keys { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .key {
+      border: 0; border-radius: 12px; padding: 16px; font-size: 1.1rem;
+      background: #1f2937; color: #e5e7eb; cursor: pointer;
+      transition: transform .05s ease, filter .1s ease;
+    }
+    .key:hover { filter: brightness(1.08); }
+    .key:active { transform: translateY(1px); }
+    .key-op { background: #334155; }
+    .key-func { background: #374151; }
+    .key-eq { background: #16a34a; color: white; font-weight: 600; }
+    .key-zero { grid-column: span 2; text-align: left; padding-left: 20px; }
+  </style>
 </head>
 <body>
-  <main class="calculator" aria-label="Calculadora básica">
-    <output id="display" class="display" aria-live="polite" role="status">0</output>
-
-    <div class="keys" role="group" aria-label="Teclas de la calculadora">
-      <button data-action="clear" class="key key-func">AC</button>
-      <button data-action="backspace" class="key key-func">⌫</button>
-      <button data-action="percent" class="key key-func">%</button>
-      <button data-op="divide" class="key key-op">÷</button>
-
-      <button data-digit="7" class="key">7</button>
-      <button data-digit="8" class="key">8</button>
-      <button data-digit="9" class="key">9</button>
-      <button data-op="multiply" class="key key-op">×</button>
-
-      <button data-digit="4" class="key">4</button>
-      <button data-digit="5" class="key">5</button>
-      <button data-digit="6" class="key">6</button>
-      <button data-op="subtract" class="key key-op">−</button>
-
-      <button data-digit="1" class="key">1</button>
-      <button data-digit="2" class="key">2</button>
-      <button data-digit="3" class="key">3</button>
-      <button data-op="add" class="key key-op">+</button>
-
-      <button data-action="sign" class="key">±</button>
-      <button data-digit="0" class="key key-zero">0</button>
-      <button data-action="decimal" class="key">,</button>
-      <button data-action="equals" class="key key-eq">=</button>
-    </div>
-  </main>
-
-  <script src="script.js"></script>
-</body>
-</html>
-
+  <main class="calculator" aria-label="Calculadora
