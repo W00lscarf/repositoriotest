@@ -2,44 +2,43 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Calculadora (Hito A)</title>
-  <style>
-    body{font-family:system-ui,Arial,sans-serif;display:grid;place-content:center;min-height:100dvh;margin:0;background:#f6f7f9}
-    .card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.05);padding:24px;max-width:360px;width:90%}
-    .row{display:flex;gap:8px;align-items:center}
-    button{padding:.6rem .9rem;border-radius:10px;border:1px solid #e5e7eb;background:#f9fafb;cursor:pointer}
-    button:focus{outline:2px solid #2563eb;outline-offset:2px}
-  </style>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Calculadora</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="card">
-    <h1 style="margin-top:0">Calculadora – Hito A</h1>
-    <p>Contador pedagógico para entender eventos y estado.</p>
-    <div class="row">
-      <button id="menos">−1</button>
-      <output id="valor" aria-live="polite" style="min-width:4ch;text-align:center">0</output>
-      <button id="mas">+1</button>
+  <main class="calculator" aria-label="Calculadora básica">
+    <output id="display" class="display" aria-live="polite" role="status">0</output>
+
+    <div class="keys" role="group" aria-label="Teclas de la calculadora">
+      <button data-action="clear" class="key key-func">AC</button>
+      <button data-action="backspace" class="key key-func">⌫</button>
+      <button data-action="percent" class="key key-func">%</button>
+      <button data-op="divide" class="key key-op">÷</button>
+
+      <button data-digit="7" class="key">7</button>
+      <button data-digit="8" class="key">8</button>
+      <button data-digit="9" class="key">9</button>
+      <button data-op="multiply" class="key key-op">×</button>
+
+      <button data-digit="4" class="key">4</button>
+      <button data-digit="5" class="key">5</button>
+      <button data-digit="6" class="key">6</button>
+      <button data-op="subtract" class="key key-op">−</button>
+
+      <button data-digit="1" class="key">1</button>
+      <button data-digit="2" class="key">2</button>
+      <button data-digit="3" class="key">3</button>
+      <button data-op="add" class="key key-op">+</button>
+
+      <button data-action="sign" class="key">±</button>
+      <button data-digit="0" class="key key-zero">0</button>
+      <button data-action="decimal" class="key">,</button>
+      <button data-action="equals" class="key key-eq">=</button>
     </div>
   </main>
-  <script>
-    let estado = 0;
-    const out = document.getElementById("valor");
-    const render = () => out.textContent = String(estado);
-    document.getElementById("mas").addEventListener("click", ()=>{ estado += 1; render(); });
-    document.getElementById("menos").addEventListener("click", ()=>{ estado -= 1; render(); });
-    render();
-  <script type="module">
-  import { _tests } from "./logic.js";
-  _tests(); // corre pruebas en consola; si algo falla, verás el error
 
-  // (dejamos el contador del Hito A para referencia)
-  let estado = 0;
-  const out = document.getElementById("valor");
-  const render = () => out.textContent = String(estado);
-  document.getElementById("mas").addEventListener("click", ()=>{ estado += 1; render(); });
-  document.getElementById("menos").addEventListener("click", ()=>{ estado -= 1; render(); });
-  render();
-</script>
+  <script src="script.js"></script>
 </body>
 </html>
+
