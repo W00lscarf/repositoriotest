@@ -29,6 +29,17 @@
     document.getElementById("mas").addEventListener("click", ()=>{ estado += 1; render(); });
     document.getElementById("menos").addEventListener("click", ()=>{ estado -= 1; render(); });
     render();
-  </script>
+  <script type="module">
+  import { _tests } from "./logic.js";
+  _tests(); // corre pruebas en consola; si algo falla, verás el error
+
+  // (dejamos el contador del Hito A para referencia)
+  let estado = 0;
+  const out = document.getElementById("valor");
+  const render = () => out.textContent = String(estado);
+  document.getElementById("mas").addEventListener("click", ()=>{ estado += 1; render(); });
+  document.getElementById("menos").addEventListener("click", ()=>{ estado -= 1; render(); });
+  render();
+</script>
 </body>
 </html>
