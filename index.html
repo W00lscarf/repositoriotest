@@ -35,4 +35,131 @@
   </style>
 </head>
 <body>
-  <main class="calculator" aria-label="Calculadora
+  <main class="calculator" aria-label="Calculadora básica">
+    <output id="display" class="display" aria-live="polite" role="status">0</output>
+
+    <div class="keys" role="group" aria-label="Teclas de la calculadora">
+      <button data-action="clear" class="key key-func">AC</button>
+      <button data-action="backspace" class="key key-func">⌫</button>
+      <button data-action="percent" class="key key-func">%</button>
+      <button data-op="divide" class="key key-op">÷</button>
+
+      <button data-digit="7" class="key">7</button>
+      <button data-digit="8" class="key">8</button>
+      <button data-digit="9" class="key">9</button>
+      <button data-op="multiply" class="key key-op">×</button>
+
+      <button data-digit="4" class="key">4</button>
+      <button data-digit="5" class="key">5</button>
+      <button data-digit="6" class="key">6</button>
+      <button data-op="subtract" class="key key-op">−</button>
+
+      <button data-digit="1" class="key">1</button>
+      <button data-digit="2" class="key">2</button>
+      <button data-digit="3" class="key">3</button>
+      <button data-op="add" class="key key-op">+</button>
+
+      <button data-action="sign" class="key">±</button>
+      <button data-digit="0" class="key key-zero">0</button>
+      <button data-action="decimal" class="key">,</button>
+      <button data-action="equals" class="key key-eq">=</button>
+    </div>
+  </main>
+
+  <script>
+    // Si ves este alert al cargar, el JS está activo.
+    // alert("JS cargado");
+
+    const state = { display: "0", first: null, op: null, waitingSecond: false };
+    const displayEl = document.getElementById("display");
+    const keysEl = document.querySelector(".keys");
+
+    function updateDisplay() { displayEl.textContent = state.display.replace(".", ","); }
+    updateDisplay();
+
+    const toNumber = (s) => Number(s.replace(",", "."));
+    const clampLength = (s, max = 14) => (s.length > max ? s.slice(0, max) : s);
+
+    function compute(a, b, op) {
+      switch (op) {
+        case "add": return a + b;
+        case "subtract": return a - b;
+        case "multiply": return a * b;
+        case "divide": return b === 0 ? "Error" : a / b;
+        default: return b;
+      }
+    }
+
+    keysEl.addEventListener("click", (e) => {
+      const key = e.target.closest("button");
+      if (!key) return;
+
+      if (key.dataset.digit != null) onDigit(key.dataset.digit);
+      else if (key.dataset.action === "decimal") onDecimal();
+      else if (key.dataset.action === "clear") onClear();
+      else if (key.dataset.action === "backspace") onBackspace();
+      else if (key.dataset.action === "sign") onSign();
+      else if (key.dataset.action === "percent") onPercent();
+      else if (key.dataset.action === "equals") onEquals();
+      else if (key.dataset.op) onOperator(key.dataset.op);
+
+      updateDisplay();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      const k = e.key;
+      if (/\d/.test(k)) return onDigit(k), updateDisplay();
+      if (k === "." || k === ",") return onDecimal(), updateDisplay();
+      if (k === "Backspace") return onBackspace(), updateDisplay();
+      if (k === "Escape") return onClear(), updateDisplay();
+      if (k === "Enter" || k === "=") return onEquals(), updateDisplay();
+      if (k === "+") return onOperator("add"), updateDisplay();
+      if (k === "-") return onOperator("subtract"), updateDisplay();
+      if (k === "*") return onOperator("multiply"), updateDisplay();
+      if (k === "/") return onOperator("divide"), updateDisplay();
+    });
+
+    function onDigit(d) {
+      if (state.waitingSecond) { state.display = d; state.waitingSecond = false; }
+      else { state.display = state.display === "0" ? d : state.display + d; }
+      state.display = clampLength(state.display);
+    }
+    function onDecimal() {
+      if (state.waitingSecond) { state.display = "0,"; state.waitingSecond = false; }
+      else if (!state.display.includes(",")) state.display += ",";
+    }
+    function onOperator(nextOp) {
+      const current = toNumber(state.display);
+      if (state.first == null) state.first = current;
+      else if (!state.waitingSecond && state.op) {
+        const res = compute(state.first, current, state.op);
+        if (res === "Error") { state.display = "Error"; resetCore(); return; }
+        state.first = res; state.display = String(res).replace(".", ",");
+      }
+      state.op = nextOp; state.waitingSecond = true;
+    }
+    function onEquals() {
+      if (state.op == null) return;
+      const a = state.first, b = toNumber(state.display);
+      const res = compute(a, b, state.op);
+      if (res === "Error") { state.display = "Error"; resetCore(); return; }
+      state.display = String(res); resetCore();
+    }
+    function onClear() { state.display = "0"; resetCore(); }
+    function resetCore() { state.first = null; state.op = null; state.waitingSecond = false; }
+    function onBackspace() {
+      if (state.waitingSecond) return;
+      if (state.display.length <= 1 || state.display === "Error") state.display = "0";
+      else state.display = state.display.slice(0, -1);
+    }
+    function onSign() {
+      if (state.display === "0" || state.display === "Error") return;
+      state.display = state.display.startsWith("-") ? state.display.slice(1) : "-" + state.display;
+    }
+    function onPercent() {
+      const n = toNumber(state.display);
+      state.display = String(n / 100);
+    }
+  </script>
+</body>
+</html>
